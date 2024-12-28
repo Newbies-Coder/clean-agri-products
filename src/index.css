@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ShadCN UI default styles (optional) */
+@import '@shadcn/ui/style.css';
