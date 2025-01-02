@@ -41,7 +41,7 @@ const MobileHeader = () => {
   const handleClose = () => setIsOpen(false);
 
   return (
-    <header className="flex md:hidden sticky top-0 h-16 items-center bg-[#333] text-white">
+    <header className="flex md:hidden sticky top-0 z-30 h-16 items-center bg-[#333] text-white">
       <div className="container mx-5 flex justify-between items-center">
         <div className="text-xl font-bold">
           <img src={Logo} alt="Logo-mobile" className="h-8" />
