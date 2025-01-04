@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, PhoneCall } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { navItems } from "@/mocks/nav";
 
 const Navbar = () => {
@@ -27,10 +27,7 @@ const Navbar = () => {
             ))}
           </nav>
         </div>
-        <div className="text-white ">
-          <PhoneCall className="inline-block mr-2" />
-          (219) 555-0114
-        </div>
+        
       </div>
     </div>
   );

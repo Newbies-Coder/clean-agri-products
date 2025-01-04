@@ -19,7 +19,7 @@ module.exports = {
 				center: true,
 				screens: {
 				  'xl': '1320px',
-				  'lg': '1024px',
+				  'lg': '1025px',
 				  'md': '768px',
 				  'sm': '640px',
 				},
