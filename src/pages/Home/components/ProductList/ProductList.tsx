@@ -14,7 +14,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ data }) => {
   return (
-    <section className="container mx-auto py-10 px-5">
+    <section className="container mx-auto py-10 px-5 md:px-0">
       <h3 className="text-3xl font-semibold pb-8 text-center">Popular Products</h3>
 
       <Carousel
