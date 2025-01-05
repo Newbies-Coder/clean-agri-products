@@ -18,7 +18,7 @@ const BannerItem = ({
 		<section className='container flex flex-col items-center justify-between pt-10 lg:flex-row lg:py-5'>
 			{/* Text Section */}
 			<div
-				className={`flex flex-col justify-center text-center lg:py-12 lg:text-left lg:w-5/12 xl:w-6/12 xl:py-24 ${
+				className={`flex flex-col justify-center text-center lg:py-12 lg:text-left lg:w-6/12 xl:w-6/12 xl:py-24 ${
 					type === 'right' ? 'lg:order-2' : ''
 				}`}
 			>
@@ -27,7 +27,7 @@ const BannerItem = ({
 				</p>
 
 				{title && (
-					<h1 className='mb-7 text-5xl font-bold sm:text-6xl lg:mb-8'>
+					<h1 className='mb-7 text-4xl font-bold sm:text-4xl lg:text-5xl lg:mb-8'>
 						{title}
 					</h1>
 				)}
@@ -52,7 +52,7 @@ const BannerItem = ({
 
 			{/* Image Section */}
 			<div
-				className={`relative mx-5 flex items-center sm:mx-0 lg:h-auto lg:w-7/12 xl:w-8/12 ${
+				className={`relative px-5 flex items-center sm:px-0 lg:h-auto lg:w-7/12 xl:w-8/12 ${
 					type === 'right' ? 'lg:order-1 lg:right-10' : ''
 				}`}
 			>
