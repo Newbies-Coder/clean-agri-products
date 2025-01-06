@@ -13,8 +13,6 @@ import {
   ShoppingBag,
   UsersRound,
   ShoppingCart,
-  StickyNote,
-  Phone,
   NotepadText,
   User,
   LogOut,
@@ -25,24 +23,21 @@ import Logo from "@/assets/svg/Logo-white.svg";
 import Logo_b from "@/assets/svg/Logo-black.svg";
 
 const navItems = [
-  { title: "Home", icon: <Home size={26} />, path: "/" },
-  { title: "Products", icon: <ShoppingBag size={26} />, path: "/products" },
-  { title: "Cart", icon: <ShoppingCart size={26} />, path: "/cart" },
-  { title: "Pages", icon: <StickyNote size={26} />, path: "/cart" },
-  { title: "Blogs", icon: <NotepadText size={26} />, path: "/cart" },
-  { title: "About us", icon: <UsersRound size={26} />, path: "/cart" },
-  { title: "Contact us", icon: <Phone size={26} />, path: "/cart" },
+  { title: "Home", icon: <Home size={26} />, path: "/"},
+  { title: "Products", icon: <ShoppingBag size={26} />, path: "/products"},
+  { title: "Blogs", icon: <NotepadText size={26} />, path: "/blogs" },
+  { title: "About us", icon: <UsersRound size={26} />, path: "/about" },
 ];
 
 const MobileHeader = () => {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false); // Open/Close sheet
-  const isAuth = true;
+  const isAuth = false;
   const handleClose = () => setIsOpen(false);
 
   return (
     <header className="flex md:hidden sticky top-0 z-30 h-16 items-center bg-[#333] text-white">
-      <div className="container mx-5 flex justify-between items-center">
+      <div className="w-full mx-auto px-5 flex justify-between items-center">
         <div className="text-xl font-bold">
           <img src={Logo} alt="Logo-mobile" className="h-8" />
         </div>
@@ -62,6 +57,7 @@ const MobileHeader = () => {
             </SheetHeader>
             <nav className="flex flex-col gap-x-6 gap-y-2 py-7 text-lg mx-auto font-medium">
               {navItems.map((item) => (
+
                 <Link
                   key={item.title}
                   to={item.path}
@@ -77,6 +73,14 @@ const MobileHeader = () => {
               ))}
               {isAuth ? (
                 <>
+                <Link
+                    to="/profile"
+                    className={`flex uppercase items-center space-x-7 p-4 rounded-md active:bg-green-700 active:text-primary-foreground`}
+                    onClick={handleClose}
+                  >
+                    <ShoppingCart size={26} />
+                    <span>Cart</span>
+                  </Link>
                   <Link
                     to="/profile"
                     className={`flex uppercase items-center space-x-7 p-4 rounded-md active:bg-green-700 active:text-primary-foreground`}
@@ -85,6 +89,7 @@ const MobileHeader = () => {
                     <User size={26} />
                     <span>Profile</span>
                   </Link>
+
                   <button
                     className={`flex uppercase items-center space-x-7 p-4 rounded-md text-red-500 active:text-primary-foreground`}
                     onClick={handleClose}

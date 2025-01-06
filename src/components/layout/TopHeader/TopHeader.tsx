@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function TopHeader() {
   return (
-    <div className="h-[42px] border-b flex items-center bg-white">
+    <div className="h-[42px] border-b hidden md:flex items-center bg-white">
       <div className="container mx-5 md:mx-auto flex justify-between items-center">
         <div>
           <MapPin

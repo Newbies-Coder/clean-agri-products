@@ -6,7 +6,7 @@ import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-} from '@/components/UI/carousel';
+} from '@/components/ui/carousel';
 
 const Banner = () => {
 	return (
