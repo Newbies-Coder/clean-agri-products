@@ -76,3 +76,7 @@ body::-webkit-scrollbar-thumb {
   display: none;
 }
 
+/* Custom Rate from antd */
+.ant-rate-star {
+  margin-inline-end: 4px !important;
+}

@@ -11,10 +11,10 @@ const DiscountBanner = () => {
           alt="discount banner"
           className="w-full h-[22.5rem] object-cover rounded-xl"
         />
-        <div className="absolute top-0 right-0 left-0 bottom-0 z-10 bg-black opacity-60 "></div>
+        <div className="absolute top-0 right-0 left-0 bottom-0 z-10 bg-black xl:opacity-0 opacity-60 "></div>
 
         {/* Discount info */}
-        <div className="absolute top-1/2 left-1/2 -translate-y-1/2 xl:translate-x-1/2 text-white z-20 ">
+        <div className="absolute top-1/2 left-1/2 -translate-y-1/2 xl:translate-x-1/2 text-white z-10">
           <p className="uppercase">Summer Sale</p>
           <p className="uppercase text-4xl md:text-6xl py-5">
             <span className="font-medium text-[#ff8a00]">37%</span> off
