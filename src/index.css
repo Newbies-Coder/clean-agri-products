@@ -70,13 +70,27 @@
 }
 
  /* Hide scrollbar */
-body::-webkit-scrollbar,
-body::-webkit-scrollbar-track,
-body::-webkit-scrollbar-thumb {
-  display: none;
+.no-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar-track,
+.no-scrollbar::-webkit-scrollbar-thumb {
+  display: none !important;
 }
 
 /* Custom Rate from antd */
 .ant-rate-star {
   margin-inline-end: 4px !important;
+}
+
+/* Custom Pagination from antd */
+.ant-pagination-item-link {
+  @apply !rounded-full !bg-white !border-gray-300
+}
+.ant-pagination-item {
+  @apply !rounded-full 
+}
+.ant-pagination-item-active {
+  @apply !bg-primary !border-0 !rounded-full
+}
+.ant-pagination-item-active>a {
+  @apply !text-primary-foreground;
 }

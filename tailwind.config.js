@@ -7,23 +7,26 @@ module.exports = {
 	],
 	theme: {
     	extend: {
-			fontFamily: {
-				poppins: ['"Poppins"', 'sans-serif']
-			},
+    		fontFamily: {
+    			poppins: [
+    				'Poppins"',
+    				'sans-serif'
+    			]
+    		},
     		borderRadius: {
     			lg: 'var(--radius)',
     			md: 'calc(var(--radius) - 2px)',
     			sm: 'calc(var(--radius) - 4px)'
     		},
-			container: {
-				center: true,
-				screens: {
-				  'xl': '1320px',
-				  'lg': '1025px',
-				  'md': '768px',
-				  'sm': '640px',
-				},
-			  },
+    		container: {
+    			center: true,
+    		},
+			screens: {
+				xl: '1320px',
+				lg: '1025px',
+				md: '768px',
+				sm: '640px'
+			},
     		colors: {
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
@@ -62,9 +65,31 @@ module.exports = {
     				'1': 'hsl(var(--chart-1))',
     				'2': 'hsl(var(--chart-2))',
     				'3': 'hsl(var(--chart-3))',
-    				'4': 'hsl(var(--chart-4))', 
+    				'4': 'hsl(var(--chart-4))',
     				'5': 'hsl(var(--chart-5))'
     			}
+    		},
+    		keyframes: {
+    			'accordion-down': {
+    				from: {
+    					height: '0'
+    				},
+    				to: {
+    					height: 'var(--radix-accordion-content-height)'
+    				}
+    			},
+    			'accordion-up': {
+    				from: {
+    					height: 'var(--radix-accordion-content-height)'
+    				},
+    				to: {
+    					height: '0'
+    				}
+    			}
+    		},
+    		animation: {
+    			'accordion-down': 'accordion-down 0.2s ease-out',
+    			'accordion-up': 'accordion-up 0.2s ease-out'
     		}
     	}
     },

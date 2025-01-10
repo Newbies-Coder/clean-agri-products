@@ -14,7 +14,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="group border hover:border-primary hover:shadow-lg transition duration-200 rounded-lg">
       <Link to={`#`}>
         {/* Product Image */}
-        <div className="group relative block sm:h-64 overflow-hidden">
+        <div className="group relative block overflow-hidden">
           <img
             src={image}
             loading="lazy"
