@@ -27,7 +27,7 @@ const BannerItem = ({
 				</p>
 
 				{title && (
-					<h1 className='mb-7 text-4xl font-bold sm:text-4xl lg:text-5xl lg:mb-8'>
+					<h1 className='mb-7 text-4xl font-bold sm:text-5xl lg:text-6xl lg:mb-8'>
 						{title}
 					</h1>
 				)}
