@@ -1,6 +1,6 @@
 import { Rate } from "antd";
 import quote from "@/assets/svg/Quote.svg";
-import { CustomerReview } from "@/@types/customer-review";
+import { CustomerReview } from "@/@types/customer-review.type";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export interface CustomerReviewCardProps {
@@ -8,8 +8,8 @@ export interface CustomerReviewCardProps {
 }
 
 const CustomerReviewCard: React.FC<CustomerReviewCardProps> = ({ data }) => {
-  const { review, avatarUrl, customerName, role, rating } = data;
-  
+  const { comment, avatarUrl, customerName, role, rating } = data;
+
   return (
     <div className="flex flex-col gap-3 rounded-md border p-4 md:p-6 bg-white shadow-lg">
       {/* icon */}
@@ -18,7 +18,7 @@ const CustomerReviewCard: React.FC<CustomerReviewCardProps> = ({ data }) => {
       </div>
 
       {/* User's review */}
-      <p className="text-gray-600 text-sm line-clamp-4">{review}</p>
+      <p className="text-gray-600 text-sm line-clamp-4">{comment}</p>
 
       <div className="flex justify-between items-center pt-5">
         {/* User's Infomation */}

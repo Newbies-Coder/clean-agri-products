@@ -33,7 +33,7 @@ const ProductList: React.FC<ProductListProps> = ({ data }) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="absolute top-1 left-1/2 -translate-x-1/2 flex justify-between">
+        <div className="absolute right-1/2 -translate-x-1/2 flex justify-between">
           <CarouselPrevious className="active:bg-primary active:text-primary-foreground"/>
           <CarouselNext  className="active:bg-primary active:text-primary-foreground"/>
         </div>

@@ -1,4 +1,4 @@
-import type { CustomerReview } from "@/@types/customer-review";
+import type { CustomerReview } from "@/@types/customer-review.type";
 import CustomerReviewCard from "@/components/common/Card/CustomerReviewCard";
 import {
   Carousel,

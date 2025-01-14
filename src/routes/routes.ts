@@ -6,6 +6,7 @@ const MainLayout = lazy(() => import('@/layouts/Main/MainLayout'));
 
 // Pages
 const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
+const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetails'));
 const HomePage = lazy(() => import('@/pages/Home/Home'));
 
 // Routes
@@ -16,6 +17,7 @@ export const routes: RouteObject[] = [
         children: [
             { path: '', element: React.createElement(HomePage) },
             { path: 'products', element: React.createElement(ProductListPage) },
+            { path: 'products/:id', element: React.createElement(ProductDetailPage) },
         ],
     },
 ];
