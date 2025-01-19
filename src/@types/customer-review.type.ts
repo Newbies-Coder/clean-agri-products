@@ -1,7 +1,8 @@
 export interface CustomerReview {
-  review: string;
+  comment: string;
   avatarUrl: string;
   customerName: string;
   role: string;
   rating: number;
+  date: string
 }

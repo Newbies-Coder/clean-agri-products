@@ -9,7 +9,7 @@ module.exports = {
     	extend: {
     		fontFamily: {
     			poppins: [
-    				'Poppins"',
+    				'Poppins',
     				'sans-serif'
     			]
     		},
@@ -20,12 +20,19 @@ module.exports = {
     		},
     		container: {
     			center: true,
+				screens: {
+					xl: '1320px',
+					lg: '1025px',
+					md: '768px',
+					sm: '640px',
+				},
     		},
 			screens: {
 				xl: '1320px',
 				lg: '1025px',
 				md: '768px',
-				sm: '640px'
+				sm: '640px',
+				xs: '400px'
 			},
     		colors: {
     			background: 'hsl(var(--background))',

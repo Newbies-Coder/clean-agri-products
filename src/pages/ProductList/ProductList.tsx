@@ -13,6 +13,8 @@ const ProductListPage = () => {
         <div className="lg:basis-3/4">
           <Products />
         </div>
+
+        
       </div>
     </>
   );

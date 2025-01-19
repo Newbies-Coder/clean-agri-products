@@ -9,10 +9,10 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { name, price, discount, image, rating } = product;
+  const { name, price, discount, image, rating, id } = product;
   return (
     <div className="group border hover:border-primary hover:shadow-lg transition duration-200 rounded-lg">
-      <Link to={`#`}>
+      <Link to={`/products/${id}`}>
         {/* Product Image */}
         <div className="group relative block overflow-hidden">
           <img
@@ -36,7 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </button>
             <Link
               to={`#`}
-              className="h-10 w-10 rounded-full border border-slate-50 flex justify-center items-center bg-slate-100 hover:bg-primary hover:text-primary-foreground "
+              className="h-10 w-10 rounded-full border border-slate-50 flex justify-center items-center bg-slate-100 hover:bg-primary hover:text-primary-foreground max-lg:hidden"
             >
               <Eye size={20} strokeWidth={1.5} />
             </Link>
