@@ -16,7 +16,7 @@ export default function TopHeader() {
           </span>
         </div>
         <div>
-          <Link to="" className="text-sm text-gray-600">
+          <Link to="/auth/login" className="text-sm text-gray-600">
             Sign in
           </Link>
           <span className="text-sm text-gray-600 mx-2">
