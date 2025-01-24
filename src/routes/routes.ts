@@ -10,6 +10,7 @@ const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetails'));
 const HomePage = lazy(() => import('@/pages/Home/Home'));
 const LoginPage = lazy(() => import('@/pages/Login'));
+const RegisterPage = lazy(() => import('@/pages/Register'));
 
 // Routes
 export const routes: RouteObject[] = [
@@ -27,6 +28,7 @@ export const routes: RouteObject[] = [
         element: React.createElement(AuthLayout),
         children: [
             { path: 'login', element: React.createElement(LoginPage) },
+            { path: 'register', element: React.createElement(RegisterPage) },
         ],
     },
 ];
