@@ -11,6 +11,7 @@ const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetail
 const HomePage = lazy(() => import('@/pages/Home/Home'));
 const LoginPage = lazy(() => import('@/pages/Login'));
 const RegisterPage = lazy(() => import('@/pages/Register'));
+const OTPVerification = lazy(() => import('@/pages/OTPVerification'));
 
 // Routes
 export const routes: RouteObject[] = [
@@ -29,6 +30,7 @@ export const routes: RouteObject[] = [
         children: [
             { path: 'login', element: React.createElement(LoginPage) },
             { path: 'register', element: React.createElement(RegisterPage) },
+            { path: 'otp-verification', element: React.createElement(OTPVerification) },
         ],
     },
 ];
