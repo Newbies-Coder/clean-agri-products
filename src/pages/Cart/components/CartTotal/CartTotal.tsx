@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cartItems } from "@/mocks/cart";
+import { Link } from "react-router-dom";
 
 const CartTotal = () => {
   // Calculate the subtotal of the cart
@@ -27,7 +28,7 @@ const CartTotal = () => {
         </div>
 
         <Button className="w-full text-white py-6 rounded-full hover:bg-primary-600 mt-10">
-          Proceed to Checkout
+          <Link to="/checkout">Proceed to Checkout</Link>
         </Button>
       </div>
     </>
