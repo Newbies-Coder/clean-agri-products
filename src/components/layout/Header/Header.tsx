@@ -3,8 +3,13 @@ import Search from "../SearchBar";
 import { Heart, ShoppingCart } from "lucide-react";
 import Navbar from "../Navbar";
 import Logo from "@/assets/svg/Logo-black.svg";
+import { cartItems } from "@/mocks/cart";
 
 export default function Header() {
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
   return (
     <>
       <header className="sticky z-20 top-0 hidden md:block">
@@ -30,12 +35,12 @@ export default function Header() {
                     2
                   </span>
                 </div>
-                <div className="hidden lg:block">
+                <Link to="/cart" className="hidden lg:block">
                   <p className="text-xs font-extralight tracking-wide">
                     Shopping cart:
                   </p>
-                  <p className="font-semibold">$57.00</p>
-                </div>
+                  <p className="font-semibold">${subtotal}</p>
+                </Link>
               </div>
             </div>
           </div>
