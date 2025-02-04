@@ -9,6 +9,7 @@ const AuthLayout = lazy(() => import('@/layouts/Auth/AuthLayout'));
 const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetails'));
 const HomePage = lazy(() => import('@/pages/Home/Home'));
+const CartPage = lazy(() => import('@/pages/Cart/Cart'));
 const LoginPage = lazy(() => import('@/pages/Login'));
 const RegisterPage = lazy(() => import('@/pages/Register'));
 const OTPVerification = lazy(() => import('@/pages/OTPVerification'));
@@ -22,6 +23,7 @@ export const routes: RouteObject[] = [
             { path: '', element: React.createElement(HomePage) },
             { path: 'products', element: React.createElement(ProductListPage) },
             { path: 'products/:id', element: React.createElement(ProductDetailPage) },
+            { path: 'cart', element: React.createElement(CartPage) },
         ],
     },
     {
