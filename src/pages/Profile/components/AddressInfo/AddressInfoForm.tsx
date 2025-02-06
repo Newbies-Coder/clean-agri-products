@@ -17,25 +17,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { checkoutSchema, type CheckoutType } from "@/schemas/checkout.schema";
+import { addressSchema, AddressType } from "@/schemas/address.schema";
+import { Button } from "@/components/ui/button";
 import { user } from "@/mocks/user";
 
-const UserInfo = () => {
+const AddressInfoForm = () => {
   // Logged in user information
-  const { full_name, email, phone, province, district, ward, addressDetail } =
-    user;
+  const { province, district, ward, addressDetail } = user;
 
   // States
   const [selectedProvince, setSelectedProvince] = useState<string>(province);
   const [selectedDistrict, setSelectedDistrict] = useState<string>(district);
 
   // Define form.
-  const form = useForm<CheckoutType>({
-    resolver: zodResolver(checkoutSchema),
+  const form = useForm<AddressType>({
+    resolver: zodResolver(addressSchema),
     defaultValues: {
-      full_name,
-      email,
-      phone,
       province,
       district,
       ward,
@@ -43,75 +40,25 @@ const UserInfo = () => {
     },
   });
 
+  // 'isDirty' will return 'true' if any field in the form changes
+  const {
+    formState: { isDirty },
+  } = form;
+
   // Submit handler.
-  function onSubmit(values: CheckoutType) {
+  function onSubmit(values: AddressType) {
     console.log(values);
   }
 
   return (
     <>
-      <h2 className="text-2xl mb-8 font-medium">Your Infomation</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full mx-auto space-y-6"
+          className="w-full mx-auto space-y-6 p-6"
         >
-          <FormField
-            control={form.control}
-            name="full_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Full Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter Your Full Name"
-                    className="flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid sm:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter Your Email"
-                      className="flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Phone number</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter Your Phone"
-                      className="flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Adrress */}
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Province field */}
             <FormField
               control={form.control}
               name="province"
@@ -122,9 +69,9 @@ const UserInfo = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       setSelectedProvince(value);
-                      setSelectedDistrict(""); // Reset quận/huyện
-                      form.setValue("district", ""); // Reset form quận/huyện
-                      form.setValue("ward", ""); // Reset form xã/phường
+                      setSelectedDistrict(""); // Reset district when province changes
+                      form.setValue("district", ""); // Reset form dístirct
+                      form.setValue("ward", ""); // Reset form ward
                     }}
                     value={field.value || ""}
                   >
@@ -137,15 +84,17 @@ const UserInfo = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Ho Chi Minh</SelectItem>
-                      <SelectItem value="2">Ha Noi</SelectItem>
-                      <SelectItem value="3">Hai Phong</SelectItem>
+                      <SelectItem value="Ho Chi Minh">Ho Chi Minh</SelectItem>
+                      <SelectItem value="Ha Noi">Ha Noi</SelectItem>
+                      <SelectItem value="Hai Phong">Hai Phong</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* District field */}
             <FormField
               control={form.control}
               name="district"
@@ -156,7 +105,7 @@ const UserInfo = () => {
                     onValueChange={(value) => {
                       field.onChange(value);
                       setSelectedDistrict(value);
-                      form.setValue("ward", ""); // Reset xã/phường khi chọn lại quận/huyện
+                      form.setValue("ward", ""); // Reset ward when district changes
                     }}
                     value={field.value || ""}
                     disabled={!selectedProvince}
@@ -170,15 +119,17 @@ const UserInfo = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Binh Thanh</SelectItem>
-                      <SelectItem value="2">Tan Phu</SelectItem>
-                      <SelectItem value="3">TP. Thu Duc</SelectItem>
+                      <SelectItem value="Binh Thanh">Binh Thanh</SelectItem>
+                      <SelectItem value="Tan Phu">Tan Phu</SelectItem>
+                      <SelectItem value="TP Thu Duc">TP Thu Duc</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Ward field */}
             <FormField
               control={form.control}
               name="ward"
@@ -187,7 +138,7 @@ const UserInfo = () => {
                   <FormLabel className="text-base">Commune/Ward</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    value={field.value || ""}
+                    value={field.value}
                     disabled={!selectedDistrict}
                   >
                     <FormControl>
@@ -199,9 +150,9 @@ const UserInfo = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Long Truong</SelectItem>
-                      <SelectItem value="2">Hiep Phu</SelectItem>
-                      <SelectItem value="3">Binh Tho</SelectItem>
+                      <SelectItem value="Long Truong">Long Truong</SelectItem>
+                      <SelectItem value="Hiep Phu">Hiep Phu</SelectItem>
+                      <SelectItem value="Binh Tho">Binh Tho</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -226,10 +177,20 @@ const UserInfo = () => {
               </FormItem>
             )}
           />
+          <div className="mt-12">
+            {isDirty && (
+              <Button
+                type="submit"
+                className="p-6 font-medium duration-300 rounded-full text-white bg-primary hover:bg-primary/80"
+              >
+                Save changes
+              </Button>
+            )}
+          </div>
         </form>
       </Form>
     </>
   );
 };
 
-export default UserInfo;
+export default AddressInfoForm;
