@@ -1,15 +1,16 @@
-import React, { Suspense } from 'react';
-import { useRoutes } from 'react-router-dom';
-import { routes } from './routes/routes';
+import React, { Suspense } from "react";
+import { HelmetProvider } from "react-helmet-async";
+import { useRoutes } from "react-router-dom";
+import { routes } from "./routes/routes";
 
 const App: React.FC = () => {
-    const element = useRoutes(routes);
+  const element = useRoutes(routes);
 
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-          {element}
-        </Suspense>
-    );
+  return (
+    <HelmetProvider>
+      <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>
+    </HelmetProvider>
+  );
 };
 
 export default App;

@@ -4,6 +4,7 @@ import React, { lazy } from 'react';
 // Layouts
 const MainLayout = lazy(() => import('@/layouts/Main/MainLayout'));
 const AuthLayout = lazy(() => import('@/layouts/Auth/AuthLayout'));
+const AccountLayout = lazy(() => import('@/layouts/Account/AccountLayout'));
 
 // Pages
 const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
@@ -13,7 +14,8 @@ const CartPage = lazy(() => import('@/pages/Cart/Cart'));
 const CheckoutPage = lazy(() => import('@/pages/Checkout/Checkout'));
 const LoginPage = lazy(() => import('@/pages/Login'));
 const RegisterPage = lazy(() => import('@/pages/Register'));
-const OTPVerification = lazy(() => import('@/pages/OTPVerification'));
+const OTPVerificationPage = lazy(() => import('@/pages/OTPVerification'));
+const ProfilePage = lazy(() => import('@/pages/Profile/Profile'));
 
 // Routes
 export const routes: RouteObject[] = [
@@ -34,7 +36,14 @@ export const routes: RouteObject[] = [
         children: [
             { path: 'login', element: React.createElement(LoginPage) },
             { path: 'register', element: React.createElement(RegisterPage) },
-            { path: 'otp-verification', element: React.createElement(OTPVerification) },
+            { path: 'otp-verification', element: React.createElement(OTPVerificationPage) },
+        ],
+    },
+    {
+        path: '/account/',
+        element: React.createElement(AccountLayout),
+        children: [
+            { path: 'profile', element: React.createElement(ProfilePage) },
         ],
     },
 ];
