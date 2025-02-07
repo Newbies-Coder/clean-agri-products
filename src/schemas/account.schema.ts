@@ -8,4 +8,16 @@ export const accountInfoSchema = z.object({
     .regex(/^\d{10}$/, "Phone number must contain exactly 10 digits"),
 });
 
+export const changePasswordSchema = z
+  .object({
+    password: z.string().min(8).max(16),
+    new_password: z.string().min(8).max(16),
+    confirm_password: z.string().min(8).max(16),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    path: ["confirm_password"],
+    message: "Confirm password must match the password",
+  });
+
 export type AccountInfoType = z.infer<typeof accountInfoSchema>;
+export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
