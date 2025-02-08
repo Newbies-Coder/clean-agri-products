@@ -5,8 +5,9 @@ import React, { lazy } from 'react';
 const MainLayout = lazy(() => import('@/layouts/Main/MainLayout'));
 const AuthLayout = lazy(() => import('@/layouts/Auth/AuthLayout'));
 const AccountLayout = lazy(() => import('@/layouts/Account/AccountLayout'));
+const AdminLayout = lazy(() => import('@/layouts/Admin/AdminLayout'));
 
-// Pages
+// User Pages
 const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetails'));
 const HomePage = lazy(() => import('@/pages/Home/Home'));
@@ -16,6 +17,9 @@ const LoginPage = lazy(() => import('@/pages/Login'));
 const RegisterPage = lazy(() => import('@/pages/Register'));
 const OTPVerificationPage = lazy(() => import('@/pages/OTPVerification'));
 const ProfilePage = lazy(() => import('@/pages/Profile/Profile'));
+
+// Admin Pages
+const DashboardPage = lazy(() => import('@/pages/Admin/Dashboard'));
 
 // Routes
 export const routes: RouteObject[] = [
@@ -44,6 +48,13 @@ export const routes: RouteObject[] = [
         element: React.createElement(AccountLayout),
         children: [
             { path: 'profile', element: React.createElement(ProfilePage) },
+        ],
+    },
+    {
+        path: '/admin/',
+        element: React.createElement(AdminLayout),
+        children: [
+            { path: '', element: React.createElement(DashboardPage) },
         ],
     },
 ];
