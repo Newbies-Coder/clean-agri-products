@@ -1,0 +1,81 @@
+
+// Responsive Layout admin
+$sidebarAdminWidth: 300px;
+$sidebarMainAdminWidth: 228px;
+$sidebarSubAdminWidth: ($sidebarAdminWidth - $sidebarMainAdminWidth);
+
+.sidebar-main-admin {
+  width: $sidebarMainAdminWidth;
+}
+.sidebar-sub-admin {
+  width: sidebarSubAdminWidth;
+}
+.content-admin {
+  margin-left: $sidebarAdminWidth;
+}
+.overlay {
+  display: none;
+}
+.toggle-sidebar {
+  .bars-icon {
+    display: block;
+  }
+  .chevron-left-icon {
+    display: none;
+  }
+  &.open {
+    .chevron-left-icon {
+      display: block;
+    }
+    .bars-icon {
+      display: none;
+    }
+  }
+}
+@media (min-width: 1280px) {
+  .sidebar-main-admin {
+    margin-left: 0;
+
+    &.open {
+      margin-left: -$sidebarMainAdminWidth;
+    }
+  }
+
+  .content-admin {
+    width: calc(100% - $sidebarAdminWidth);
+
+    &.open {
+      width: calc(100% - $sidebarSubAdminWidth);
+      margin-left: $sidebarSubAdminWidth;
+    }
+  }
+}
+
+@media (max-width: 1280px) {
+  .sidebar-admin {
+    margin-left: -$sidebarAdminWidth;
+
+    &.open {
+      margin-left: 0;
+    }
+  }
+  .sidebar-main-admin {
+    margin-left: 0;
+    &.open {
+      margin-left: 0;
+    }
+    &.open-sidebar-main {
+      margin-left: 0;
+    }
+  }
+  .content-admin {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .overlay {
+    &.open {
+      display: block;
+    }
+  }
+}
