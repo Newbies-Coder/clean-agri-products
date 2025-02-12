@@ -17,7 +17,7 @@ const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger ref={ref} className={cn("data-[state=active]:bg-[rgba(132,108,249,0.2)]", className)} {...props} />
+  <TabsPrimitive.Trigger ref={ref} className={cn("", className)} {...props} />
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
