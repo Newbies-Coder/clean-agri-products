@@ -1,8 +1,12 @@
-import { Eye, Mail, Phone, UserPen } from "lucide-react";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import { Mail, Phone, UserPen } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { RegisterSchema, RegisterType } from "@/schemas/auth.schema";
+import { registerAction } from "@/actions/auth.action";
+import { useToast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -11,34 +15,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
-// Validation
-const formSchema = z
-  .object({
-    full_name: z.string().min(4, "Full name must have at least 4 characters"),
-    email: z.string().min(8, "Email must have at least 8 characters"),
-    password: z
-      .string()
-      .min(6, "Password must have at least 6 characters")
-      .max(16, "Password cannot exceed 16 characters"),
-    confirm_password: z
-      .string()
-      .min(6, "Confirm password must have at least 6 characters")
-      .max(16, "Confirm password cannot exceed 16 characters"),
-    phone: z
-      .string()
-      .regex(/^\d{10}$/, "Phone number must contain exactly 10 digits"),
-  })
-  .refine((data) => data.password === data.confirm_password, {
-    path: ["confirm_password"],
-    message: "Confirm password must match the password",
-  });
+import { useState } from "react";
+import { DotLoader } from "react-spinners";
+import { InputPassword } from "@/components/ui/input-password";
 
 const RegisterForm = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   // Define form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<RegisterType>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       full_name: "",
       email: "",
@@ -49,8 +36,40 @@ const RegisterForm = () => {
   });
 
   // Submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(data: RegisterType) {
+    try {
+      setLoading(true);
+      const response = await registerAction(data);
+      if (!response?.success && response !== undefined) {
+        toast({
+          title: "Failed!",
+          description: response.message,
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+      toast({
+        title: "Successfully!",
+        description: "You have successfully created an account",
+        variant: "success",
+        duration: 3000,
+      });
+
+      // Navigate to the verification OTP page
+      navigate("/auth/otp-verification");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast({
+        title: "Failed!",
+        description: error.message || "Something went wrong!",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -64,83 +83,68 @@ const RegisterForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Email</FormLabel>
+              <FormLabel className="font-semibold">
+                Email <FormMessage className="inline" />
+              </FormLabel>
               <div className="relative">
                 <FormControl>
-                  <Input
-                    placeholder="Enter Email"
-                    className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 placeholder:text-sm"
-                    {...field}
-                  />
+                  <Input placeholder="Enter Email" {...field} />
                 </FormControl>
                 <Mail className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex max-lg:flex-col gap-4 ">
-          <FormField
-            control={form.control}
-            name="full_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">Full name</FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      placeholder="Enter full name..."
-                      className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 placeholder:text-sm"
-                      {...field}
-                    />
-                  </FormControl>
-                  <UserPen className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">Phone number</FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      placeholder="Enter phone number"
-                      className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 placeholder:text-sm"
-                      {...field}
-                    />
-                  </FormControl>
-                  <Phone className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="grid grid-cols-2 gap-4">
+
+        <FormField
+          control={form.control}
+          name="full_name"
+          render={({ field }) => (
+            <FormItem className="flex flex-col justify-end">
+              <FormLabel className="font-semibold ">
+                Full name <FormMessage className="inline" />
+              </FormLabel>
+              <div className="relative">
+                <FormControl>
+                  <Input placeholder="Enter full name..." {...field} />
+                </FormControl>
+                <UserPen className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem className="flex flex-col justify-end">
+              <FormLabel className="font-semibold">
+                Phone number <FormMessage className="inline" />
+              </FormLabel>
+              <div className="relative">
+                <FormControl>
+                  <Input placeholder="Enter phone number" {...field} />
+                </FormControl>
+                <Phone className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
+              </div>
+            </FormItem>
+          )}
+        />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4"> */}
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Password</FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      placeholder="Enter Password"
-                      type="password"
-                      className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 placeholder:text-sm"
-                      {...field}
-                    />
-                  </FormControl>
-                  <Eye className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-                </div>
-                <FormMessage />
+                <FormLabel className="font-semibold">
+                  Password <FormMessage className="inline" />
+                </FormLabel>
+                <FormControl>
+                  <InputPassword placeholder="Enter Password" {...field} />
+                </FormControl>
               </FormItem>
             )}
           />
@@ -151,29 +155,29 @@ const RegisterForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-semibold">
-                  Confirm Password
+                  Confirm Password <FormMessage className="inline" />
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Confirm Password"
-                    type="password"
-                    className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 placeholder:text-sm"
-                    {...field}
-                  />
+                  <InputPassword placeholder="Confirm Password" {...field} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-        </div>
+        {/* </div> */}
 
-        <div className="mt-12">
-          <Button
-            type="submit"
-            className="w-full py-6 font-semibold tracking-wider duration-300 rounded-full text-white bg-primary hover:bg-primary/80 focus:outline-none"
-          >
-            Register
-          </Button>
+        <div className="mt-12 text-center">
+          {loading ? (
+            <div className="w-full flex justify-center">
+              <DotLoader color="#33C23F" size="50" />
+            </div>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full py-6 font-semibold tracking-wider duration-300 rounded-full text-white bg-primary hover:bg-primary/80 focus:outline-none"
+            >
+              Register
+            </Button>
+          )}
         </div>
       </form>
     </Form>

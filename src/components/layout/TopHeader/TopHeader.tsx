@@ -22,7 +22,7 @@ export default function TopHeader() {
           <span className="text-sm text-gray-600 mx-2">
             |
           </span>
-          <Link to="" className="text-sm text-gray-600">
+          <Link to="/auth/register" className="text-sm text-gray-600">
             Sign up
           </Link>
         </div>
