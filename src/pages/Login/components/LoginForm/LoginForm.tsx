@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { InputPassword } from "@/components/ui/input-password";
 import { LoginSchema, LoginType } from "@/schemas/auth.schema";
 import { useToast } from "@/hooks/use-toast";
+import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
 
 const LoginForm = () => {
   const { toast } = useToast();
@@ -37,34 +38,13 @@ const LoginForm = () => {
   async function onSubmit(data: LoginType) {
     try {
       setLoading(true);
-      const response = await loginAction(data);
-      if (response !== undefined && !response?.success) {
-        toast({
-          title: "Failed!",
-          description: response.message,
-          variant: "destructive",
-          duration: 3000,
-        });
-        return;
-      }
-      toast({
-        title: "Login successfully!",
-        description: "Welcome you to our shop",
-        variant: "success",
-        duration: 3000,
-      });
-
-      // Navigate to the Home page
-      navigate("/");
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast({
-        title: "Failed!",
-        description: error.message || "Something went wrong!",
-        variant: "destructive",
-        duration: 3000,
-      });
+      await loginAction(data);
+      toast(NOTIFICATIONS.AUTH.LOGIN.TOAST); // Notify if login successfully
+      navigate("/"); // Navigate to the Home page
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
+      toast(ERROR_TOAST(errorMessage));
     } finally {
       setLoading(false);
     }

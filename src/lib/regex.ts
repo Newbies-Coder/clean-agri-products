@@ -11,10 +11,9 @@ export const regexPassword: RegExp =
 
 
 /*  Regex Phone number:
-  - ^ and $: Ensure the entire string matches exactly 10 digits.
-  - \d{10}: Matches exactly 10 numeric digits (0-9).
+  -  Ensure the entire string matches exactly 10 digits.
 */
-export const regexPhoneNumber: RegExp = /^\d{10}$/;
+export const regexPhoneNumber: RegExp = /(0[3|5|7|8|9])+([0-9]{8})\b/;
 
 
 /* Regex Email:

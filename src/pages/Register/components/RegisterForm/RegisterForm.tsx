@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 import { DotLoader } from "react-spinners";
 import { InputPassword } from "@/components/ui/input-password";
+import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
 
 const RegisterForm = () => {
   const { toast } = useToast();
@@ -39,34 +40,14 @@ const RegisterForm = () => {
   async function onSubmit(data: RegisterType) {
     try {
       setLoading(true);
-      const response = await registerAction(data);
-      if (!response?.success && response !== undefined) {
-        toast({
-          title: "Failed!",
-          description: response.message,
-          variant: "destructive",
-          duration: 3000,
-        });
-        return;
-      }
-      toast({
-        title: "Successfully!",
-        description: "You have successfully created an account",
-        variant: "success",
-        duration: 3000,
-      });
+      await registerAction(data);
+      toast(NOTIFICATIONS.AUTH.REGISTER.TOAST); // Notify if create account successfully
+      navigate("/auth/otp-verification"); // Navigate to the OTP verification page
 
-      // Navigate to the verification OTP page
-      navigate("/auth/otp-verification");
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast({
-        title: "Failed!",
-        description: error.message || "Something went wrong!",
-        variant: "destructive",
-        duration: 3000,
-      });
+    } catch (error: unknown) {
+      const errorMessage = 
+        (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
+      toast(ERROR_TOAST(errorMessage));
     } finally {
       setLoading(false);
     }
@@ -96,73 +77,72 @@ const RegisterForm = () => {
           )}
         />
         <div className="grid grid-cols-2 gap-4">
-
-        <FormField
-          control={form.control}
-          name="full_name"
-          render={({ field }) => (
-            <FormItem className="flex flex-col justify-end">
-              <FormLabel className="font-semibold ">
-                Full name <FormMessage className="inline" />
-              </FormLabel>
-              <div className="relative">
-                <FormControl>
-                  <Input placeholder="Enter full name..." {...field} />
-                </FormControl>
-                <UserPen className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem className="flex flex-col justify-end">
-              <FormLabel className="font-semibold">
-                Phone number <FormMessage className="inline" />
-              </FormLabel>
-              <div className="relative">
-                <FormControl>
-                  <Input placeholder="Enter phone number" {...field} />
-                </FormControl>
-                <Phone className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-              </div>
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="full_name"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <FormLabel className="font-semibold ">
+                  Full name <FormMessage className="inline" />
+                </FormLabel>
+                <div className="relative">
+                  <FormControl>
+                    <Input placeholder="Enter full name..." {...field} />
+                  </FormControl>
+                  <UserPen className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <FormLabel className="font-semibold">
+                  Phone number <FormMessage className="inline" />
+                </FormLabel>
+                <div className="relative">
+                  <FormControl>
+                    <Input placeholder="Enter phone number" {...field} />
+                  </FormControl>
+                  <Phone className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
 
         {/* <div className="grid grid-cols-2 gap-4"> */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">
-                  Password <FormMessage className="inline" />
-                </FormLabel>
-                <FormControl>
-                  <InputPassword placeholder="Enter Password" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">
+                Password <FormMessage className="inline" />
+              </FormLabel>
+              <FormControl>
+                <InputPassword placeholder="Enter Password" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="confirm_password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">
-                  Confirm Password <FormMessage className="inline" />
-                </FormLabel>
-                <FormControl>
-                  <InputPassword placeholder="Confirm Password" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="confirm_password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">
+                Confirm Password <FormMessage className="inline" />
+              </FormLabel>
+              <FormControl>
+                <InputPassword placeholder="Confirm Password" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         {/* </div> */}
 
         <div className="mt-12 text-center">
