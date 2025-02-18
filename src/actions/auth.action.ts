@@ -1,7 +1,8 @@
 import axios from "axios";
 import { envConfig } from "@/configs/envConfig";
-import { RegisterType } from "@/schemas/auth.schema";
+import { RegisterType, LoginType } from "@/schemas/auth.schema";
 import { setTokenToCookies } from "@/lib/token";
+import { NOTIFICATIONS } from "@/constants/notifications";
 
 interface AuthResponse {
   statusCode?: number;
@@ -28,27 +29,51 @@ export const registerAction = async (formData: RegisterType) => {
 
     // Check the tokens are exist
     if (!access_token || !refresh_token) {
-      return {
-        success: false,
-        message: "Invalid response from server. Tokens missing.",
-      };
+      throw new Error(NOTIFICATIONS.AUTH.TOKEN_MISSED);
     }
 
     // Set access token & refresh token to Cookies
     setTokenToCookies("access_token", access_token);
     setTokenToCookies("refresh_token", refresh_token);
-
-    return { success: true, message: response.data.message };
-
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      return {
-        success: false,
-        message:
-          error.response?.data?.message ||
-          `Request failed with status ${error.response?.status}` ||
-          "Something went wrong!",
-      };
+      throw new Error(
+        error.response?.data?.message ||
+        NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
+          NOTIFICATIONS.ERROR.SYSTEM
+      );
     }
+    throw new Error(NOTIFICATIONS.ERROR.UNDEFINED);
+  }
+};
+
+export const loginAction = async (formData: LoginType) => {
+  try {
+    // Send request to server
+    const response = await axios.post<AuthResponse>(
+      `${envConfig.VITE_API_URL}/users/login`,
+      formData
+    );
+
+    // Success
+    const { access_token, refresh_token } = response.data.data;
+
+    // Check the tokens are exist
+    if (!access_token || !refresh_token) {
+      throw new Error(NOTIFICATIONS.AUTH.TOKEN_MISSED);
+    }
+
+    // Set access token & refresh token to Cookies
+    setTokenToCookies("access_token", access_token);
+    setTokenToCookies("refresh_token", refresh_token);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message ||
+          NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
+          NOTIFICATIONS.ERROR.SYSTEM
+      );
+    }
+    throw new Error(NOTIFICATIONS.ERROR.UNDEFINED);
   }
 };

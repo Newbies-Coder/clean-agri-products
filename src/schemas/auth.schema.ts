@@ -1,10 +1,11 @@
-import { regexPassword, regexPhoneNumber } from "@/lib/regex";
+import { regexEmail, regexPassword, regexPhoneNumber } from "@/lib/regex";
 import { z } from "zod";
 
+// Register Form validation
 export const RegisterSchema = z
   .object({
     full_name: z.string().min(4, "must have at least 4 characters"),
-    email: z.string().min(8, "must have at least 8 characters"),
+    email: z.string().regex(regexEmail, "is not valid"),
     password: z
       .string()
       .min(8, "must have at least 8 characters")
@@ -22,3 +23,18 @@ export const RegisterSchema = z
   });
 
 export type RegisterType = z.infer<typeof RegisterSchema>;
+
+// Login Form validation
+export const LoginSchema = z.object({
+  email: z.string().regex(regexEmail, "is not valid"),
+  password: z
+    .string()
+    .min(8, "must have at least 8 characters")
+    .regex(
+      regexPassword,
+      "must contain numbers, uppercase, lowercase letters and special characters"
+    )
+    .max(16, "cannot exceed 16 characters"),
+});
+
+export type LoginType = z.infer<typeof LoginSchema>;

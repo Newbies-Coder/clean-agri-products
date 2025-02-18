@@ -1,7 +1,10 @@
-import { Eye, Mail } from "lucide-react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { DotLoader } from "react-spinners";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail } from "lucide-react";
+import { loginAction } from "@/actions/auth.action";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,17 +16,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-// Validation
-const formSchema = z.object({
-  email: z.string().min(8).max(30),
-  password: z.string().min(6).max(16),
-});
+import { InputPassword } from "@/components/ui/input-password";
+import { LoginSchema, LoginType } from "@/schemas/auth.schema";
+import { useToast } from "@/hooks/use-toast";
+import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
 
 const LoginForm = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   // Define form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<LoginType>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -31,8 +35,19 @@ const LoginForm = () => {
   });
 
   // Submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(data: LoginType) {
+    try {
+      setLoading(true);
+      await loginAction(data);
+      toast(NOTIFICATIONS.AUTH.LOGIN.TOAST); // Notify if login successfully
+      navigate("/"); // Navigate to the Home page
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
+      toast(ERROR_TOAST(errorMessage));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -46,18 +61,15 @@ const LoginForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base">Email</FormLabel>
+              <FormLabel className="font-semibold">
+                Email <FormMessage className="inline" />
+              </FormLabel>
               <div className="relative">
                 <FormControl>
-                  <Input
-                    placeholder="Enter Email"
-                    className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 "
-                    {...field}
-                  />
+                  <Input placeholder="Enter Email" {...field} />
                 </FormControl>
                 <Mail className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
               </div>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -67,19 +79,12 @@ const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem className="mt-8">
-              <FormLabel className="text-base">Password</FormLabel>
-              <div className="relative">
-                <FormControl>
-                  <Input
-                    placeholder="Enter Password"
-                    type="password"
-                    className="w-full border-b focus:outline-none border-gray-300 focus:border-gray-400 pl-2 pr-8 py-3 outline-none focus-visible:ring-0 focus-visible:border-b focus-visible:border-gray-950 "
-                    {...field}
-                  />
-                </FormControl>
-                <Eye className="w-5 h-5 absolute right-2 bottom-4 cursor-pointer text-gray-600" />
-              </div>
-              <FormMessage />
+              <FormLabel className="font-semibold">
+                Password <FormMessage className="inline" />
+              </FormLabel>
+              <FormControl>
+                <InputPassword placeholder="Enter Password" {...field} />
+              </FormControl>
             </FormItem>
           )}
         />
@@ -92,19 +97,28 @@ const LoginForm = () => {
             </label>
           </div>
           <div>
-            <a href="" className="text-primary font-semibold hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-primary font-semibold hover:underline"
+            >
               Forgot Password?
-            </a>
+            </Link>
           </div>
         </div>
 
         <div className="mt-12">
-          <Button
-            type="submit"
-            className="w-full py-6 text-lg font-semibold tracking-wider duration-300 rounded-full text-white bg-primary hover:bg-primary/80 focus:outline-none"
-          >
-            Login
-          </Button>
+          {loading ? (
+            <div className="w-full flex justify-center">
+              <DotLoader color="#33C23F" size="50" />
+            </div>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full py-6 font-semibold tracking-wider duration-300 rounded-full text-white bg-primary hover:bg-primary/80 focus:outline-none"
+            >
+              Login
+            </Button>
+          )}
         </div>
 
         <div className="my-4 flex items-center gap-4">
