@@ -3,8 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { TokenDecoded } from "@/@types/token.type";
 import { envConfig } from "@/configs/envConfig";
 
-
-// Set token to Cookies 
+// Set token to Cookies
 export const setTokenToCookies = (cookiesName: string, token: string) => {
   // Decode Token
   const decoded = jwtDecode(token) as TokenDecoded;
@@ -18,3 +17,14 @@ export const setTokenToCookies = (cookiesName: string, token: string) => {
     sameSite: "strict", // Block all requests from other sites (prevent CSRF).
   });
 };
+
+// Get token from Cookies
+export const getTokenFromCookies = (cookiesName: string) => {
+  return Cookies.get(cookiesName);
+};
+
+// Remove Tokens in cookies
+export const removeTokenInCookies = () => {
+  Cookies.remove('access_token')
+  Cookies.remove('refresh_token')
+}

@@ -38,3 +38,12 @@ export const LoginSchema = z.object({
 });
 
 export type LoginType = z.infer<typeof LoginSchema>;
+
+// Verify OTP form validation
+export const VerifyOTPSchema = z.object({
+  otp: z.string().regex(/^\d{6}$/, {
+    message: "OTP must be exactly 6 digits.",
+  }),
+});
+
+export type VerifyOTPType = z.infer<typeof VerifyOTPSchema>

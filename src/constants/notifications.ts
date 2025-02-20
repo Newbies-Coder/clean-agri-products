@@ -18,6 +18,13 @@ export const NOTIFICATIONS = {
         description: "You have successfully created an account",
       }
     },
+    OTP: {
+      TOAST: {
+        title: "Successfully!",
+        description: "You have successfully registered after completing the authentication procedure!",
+      },
+      INVALID: "Invalid OTP, please try again!"
+    }
   },
 };
 

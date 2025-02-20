@@ -148,7 +148,7 @@ const RegisterForm = () => {
         <div className="mt-12 text-center">
           {loading ? (
             <div className="w-full flex justify-center">
-              <DotLoader color="#33C23F" size="50" />
+              <DotLoader color="#33C23F" size={50} />
             </div>
           ) : (
             <Button

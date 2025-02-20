@@ -1,21 +1,16 @@
 import axios from "axios";
 import { envConfig } from "@/configs/envConfig";
-import { RegisterType, LoginType } from "@/schemas/auth.schema";
+import {
+  RegisterType,
+  LoginType,
+  type VerifyOTPType,
+} from "@/schemas/auth.schema";
 import { setTokenToCookies } from "@/lib/token";
 import { NOTIFICATIONS } from "@/constants/notifications";
+import axiosInstance from "@/lib/axiosInstance";
+import { AuthResponse } from "@/@types/auth-response.type";
 
-interface AuthResponse {
-  statusCode?: number;
-  message: string;
-  data: {
-    _id: string;
-    full_name: string;
-    email: string;
-    access_token: string;
-    refresh_token: string;
-  };
-}
-
+// Register action
 export const registerAction = async (formData: RegisterType) => {
   try {
     // Send request to server
@@ -39,7 +34,7 @@ export const registerAction = async (formData: RegisterType) => {
     if (axios.isAxiosError(error)) {
       throw new Error(
         error.response?.data?.message ||
-        NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
+          NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
           NOTIFICATIONS.ERROR.SYSTEM
       );
     }
@@ -47,6 +42,7 @@ export const registerAction = async (formData: RegisterType) => {
   }
 };
 
+// Login action
 export const loginAction = async (formData: LoginType) => {
   try {
     // Send request to server
@@ -66,6 +62,23 @@ export const loginAction = async (formData: LoginType) => {
     // Set access token & refresh token to Cookies
     setTokenToCookies("access_token", access_token);
     setTokenToCookies("refresh_token", refresh_token);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message ||
+          NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
+          NOTIFICATIONS.ERROR.SYSTEM
+      );
+    }
+    throw new Error(NOTIFICATIONS.ERROR.UNDEFINED);
+  }
+};
+
+// Verify OTP action
+export const verifyOTPAction = async (formData: VerifyOTPType) => {
+  try {
+    // Send request to server
+    await axiosInstance.post(`/users/otp/authenticate`, formData);
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       throw new Error(
