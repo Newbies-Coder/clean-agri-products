@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { List, LayoutDashboard, LogOut, Heart, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { logoutAction } from "@/actions/auth.action";
 
 const navItems = [
   {
@@ -50,6 +51,7 @@ export default function AccountSidebar() {
         ))}
 
         <Button
+        onClick={logoutAction}
           variant={"ghost"}
           className="w-full justify-start text-red-700 hover:text-red-500 px-4 py-7 text-sm gap-3"
         >

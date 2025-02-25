@@ -20,10 +20,13 @@ import { InputPassword } from "@/components/ui/input-password";
 import { LoginSchema, LoginType } from "@/schemas/auth.schema";
 import { useToast } from "@/hooks/use-toast";
 import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
+import { getProfile } from "@/actions/user.action";
+import { useAuthStore } from "@/store/auth.store";
 
 const LoginForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const setUser = useAuthStore((state) => state.setUser); // Get setUser from useAuthStore
   const [loading, setLoading] = useState<boolean>(false);
   // Define form.
   const form = useForm<LoginType>({
@@ -38,7 +41,9 @@ const LoginForm = () => {
   async function onSubmit(data: LoginType) {
     try {
       setLoading(true);
-      await loginAction(data);
+      await loginAction(data); // Call loginAction with data
+      const userData = await getProfile() // Get user data
+      setUser(userData) // Set user data to the store
       toast(NOTIFICATIONS.AUTH.LOGIN.TOAST); // Notify if login successfully
       navigate("/"); // Navigate to the Home page
     } catch (error: unknown) {

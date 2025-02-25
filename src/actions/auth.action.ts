@@ -5,10 +5,11 @@ import {
   LoginType,
   type VerifyOTPType,
 } from "@/schemas/auth.schema";
-import { setTokenToCookies } from "@/lib/token";
+import { removeTokenInCookies, setTokenToCookies } from "@/lib/token";
 import { NOTIFICATIONS } from "@/constants/notifications";
 import axiosInstance from "@/lib/axiosInstance";
 import { AuthResponse } from "@/@types/auth-response.type";
+import { useAuthStore } from "@/store/auth.store";
 
 // Register action
 export const registerAction = async (formData: RegisterType) => {
@@ -88,5 +89,29 @@ export const verifyOTPAction = async (formData: VerifyOTPType) => {
       );
     }
     throw new Error(NOTIFICATIONS.ERROR.UNDEFINED);
+  }
+};
+
+export const logoutAction = async () => {
+  try {
+    // Send request to server
+    await axiosInstance.post(`/users/logout`);
+  } catch (error) {
+    // Handle error
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message ||
+          NOTIFICATIONS.ERROR.SERVER + error.response?.status ||
+          NOTIFICATIONS.ERROR.SYSTEM
+      );
+    }
+    throw new Error(NOTIFICATIONS.ERROR.UNDEFINED);
+  } finally {
+    // Remove access token & refresh token from Cookies
+    removeTokenInCookies();
+    // Remove user from store
+    useAuthStore.getState().logout();
+    // Redirect to login page
+    window.location.href = "/auth/login";
   }
 };
