@@ -10,7 +10,7 @@ const AdminLayout = lazy(() => import('@/layouts/Admin/AdminLayout'));
 // User Pages
 const ProductListPage = lazy(() => import('@/pages/ProductList/ProductList'));
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetail/ProductDetails'));
-const HomePage = lazy(() => import('@/pages/Home/Home'));
+const HomePage = lazy(() => import('@/pages/Home'));
 const CartPage = lazy(() => import('@/pages/Cart/Cart'));
 const CheckoutPage = lazy(() => import('@/pages/Checkout/Checkout'));
 const LoginPage = lazy(() => import('@/pages/Login'));

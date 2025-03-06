@@ -8,15 +8,19 @@ import Featured from "./components/Featured";
 import DiscountBanner from "./components/DiscountBanner";
 import CustomerReview from "./components/CustomerReviews";
 import { customerReviews } from "@/mocks/customer-review";
+import { Helmet } from "react-helmet-async";
 
 export default function HomePage() {
   return (
     <>
+      <Helmet>
+        <title>Ecobaza</title>
+      </Helmet>
       <Banner />
       <Featured />
       <Categories data={categories} />
       <DiscountBanner />
-      <ProductList data={products} />
+      <ProductList />
       <HotProductList data={products} />
       <CustomerReview data={customerReviews} />
     </>

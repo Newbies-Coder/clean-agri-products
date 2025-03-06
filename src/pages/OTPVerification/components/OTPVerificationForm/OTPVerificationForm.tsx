@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/input-otp";
 import Logo from "@/assets/svg/Logo-black.svg";
 import { VerifyOTPSchema, type VerifyOTPType } from "@/schemas/auth.schema";
-import { verifyOTPAction } from "@/actions/auth.action";
+import { verifyOTPAction } from "@/apis/auth.api";
 import { NOTIFICATIONS } from "@/constants/notifications";
 import { useToast } from "@/hooks/use-toast";
 

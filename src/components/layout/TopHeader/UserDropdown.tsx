@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logoutAction } from "@/actions/auth.action";
+import { logoutAction } from "@/apis/auth.api";
 
 const UserDropdown = () => {
   // Get user from useAuthStore

@@ -2,14 +2,24 @@ import { Link } from "react-router-dom";
 import { Rate } from "antd";
 import { Button } from "@/components/ui/button";
 import { Eye, Heart, ShoppingCart } from "lucide-react";
-import type { ProductType } from "@/@types/product.type";
 
 interface ProductCardProps {
-  product: ProductType;
+  name: string;
+  price: number;
+  discount: number;
+  image: string;
+  rating: number;
+  id: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { name, price, discount, image, rating, id } = product;
+const ProductCard: React.FC<ProductCardProps> = ({
+  name,
+  price,
+  discount,
+  image,
+  rating,
+  id,
+}) => {
   return (
     <div className="group border hover:border-primary hover:shadow-lg transition duration-200 rounded-lg">
       <Link to={`/products/${id}`}>
@@ -19,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             src={image}
             loading="lazy"
             alt={name}
-            className="w-full transition duration-200 hover:scale-110"
+            className="w-full transition duration-200 hover:scale-110 h-[328px] object-cover"
           />
 
           {
@@ -34,12 +44,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <button className="h-10 w-10 rounded-full border border-slate-50 flex justify-center items-center bg-slate-100 hover:bg-primary hover:text-primary-foreground ">
               <Heart size={20} strokeWidth={1.5} />
             </button>
-            <Link
-              to={`#`}
+            <button
               className="h-10 w-10 rounded-full border border-slate-50 flex justify-center items-center bg-slate-100 hover:bg-primary hover:text-primary-foreground max-lg:hidden"
             >
               <Eye size={20} strokeWidth={1.5} />
-            </Link>
+            </button>
           </div>
         </div>
         <div className="flex items-center justify-between gap-2 rounded-b-lg p-4">
