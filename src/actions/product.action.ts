@@ -1,5 +1,5 @@
 import { getProductDetail, getProducts } from "@/apis/product.api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useProducts = (
   page?: number,
@@ -24,9 +24,12 @@ export const useProducts = (
   });
 };
 
-export const useProductDetail = (id: string) => {
+export const useProductDetail = (productId: string) => {
+  const queryClient = useQueryClient();
   return useQuery({
-    queryKey: ["product", id],
-    queryFn: () => getProductDetail(id),
+    queryKey: ["product", productId],
+    queryFn: () => getProductDetail(productId),
+    initialData: () => queryClient.getQueryData(['product', productId]), // Cache before fetching
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 };

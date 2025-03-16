@@ -1,27 +1,8 @@
 import { useState } from "react";
 import Reviews from "./Reviews";
 import AdditionalInfo from "./AdditionalInfo";
-import type { CustomerReview } from "@/@types/customer-review.type";
 
-interface TabBarProps {
-  weight: number;
-  stockStatus: string;
-  category: string;
-  color: string;
-  tags: string[];
-  type: string;
-  reviews: CustomerReview[];
-}
-
-const TabBar: React.FC<TabBarProps> = ({
-  category,
-  color,
-  stockStatus,
-  tags,
-  type,
-  weight,
-  reviews,
-}) => {
+const TabBar = ({ productId }: { productId: string }) => {
   const tabs = [
     {
       id: 1,
@@ -57,17 +38,8 @@ const TabBar: React.FC<TabBarProps> = ({
       {/* Customer Review */}
       <div className="container px-5 sm:px-0 py-10">
         {/* Admitional Info */}
-        {idActive === 1 && (
-          <AdditionalInfo
-            weight={weight}
-            category={category}
-            color={color}
-            stockStatus={stockStatus}
-            tags={tags}
-            type={type}
-          />
-        )}
-        {idActive === 2 && <Reviews reviews={reviews} />}
+        {idActive === 1 && <AdditionalInfo productId={productId} />}
+        {idActive === 2 && <Reviews />}
       </div>
     </>
   );

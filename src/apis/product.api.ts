@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NOTIFICATIONS } from "@/constants/notifications";
 import axiosInstance from "@/lib/axiosInstance";
+import type { Product } from "@/@types/product.type";
 
 export const getProducts = async (
   page?: number,
@@ -41,7 +42,7 @@ export const getProducts = async (
   }
 };
 
-export const getProductDetail = async (id: string) => {
+export const getProductDetail = async (id: string): Promise<Product>  => {
   try {
     const response = await axiosInstance.get(`/products/${id}`);
     return response.data.data;

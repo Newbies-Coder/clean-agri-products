@@ -1,59 +1,25 @@
+import { useLocation } from "react-router-dom";
 import Gallery from "./components/Gallery";
 import ProductInfo from "./components/ProductInfo";
 import TabBar from "./components/TabBar";
-import { productDetail } from "@/mocks/product";
 
 const ProductDetail = () => {
-  const {
-    images,
-    name,
-    rating,
-    reviewCount,
-    original,
-    originalPrice,
-    discount,
-    brand,
-    description,
-    category,
-    tags,
-    stockStatus,
-    weight,
-    color,
-    type,
-    reviews,
-  } = productDetail;
+  const { pathname } = useLocation();
+  const productId = pathname.split("/").pop();
   return (
     <>
       <div className="container mx-auto px-0 sm:px-5 lg:pt-10 pb-10">
         <div className="grid max-lg:grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Gallery */}
-          <Gallery images={images} name={name} />
+          <Gallery productId={productId!} />
 
           {/* Product Info */}
-          <ProductInfo
-            name={name}
-            rating={rating}
-            reviewCount={reviewCount}
-            original={original}
-            originalPrice={originalPrice}
-            discount={discount}
-            brand={brand}
-            description={description}
-            category={category}
-            tags={tags}
-            stockStatus={stockStatus}
-          />
+          <ProductInfo productId={productId!} />
         </div>
       </div>
       <TabBar
-        weight={weight}
-        type={type}
-        color={color}
-        stockStatus={stockStatus}
-        tags={tags}
-        category={category}
-        reviews={reviews}
-      />
+        productId={productId!}
+      /> 
     </>
   );
 };

@@ -1,12 +1,9 @@
 import { Rate } from "antd";
-import type { CustomerReview } from "@/@types/customer-review.type";
 import ReviewCard from "@/components/common/Card/ReviewCard";
 import { Button } from "@/components/ui/button";
+import { customerReviews } from "@/mocks/customer-review";
 
-interface ReviewsProps {
-  reviews: CustomerReview[];
-}
-const Reviews: React.FC<ReviewsProps> = ({ reviews }) => {
+const Reviews = () => {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between border-b py-4">
@@ -31,7 +28,7 @@ const Reviews: React.FC<ReviewsProps> = ({ reviews }) => {
       </div>
 
       <div className="divide-y">
-        {reviews.map((item, index) => (
+        {customerReviews.map((item, index) => (
           <ReviewCard
             key={index}
             avatarUrl={item.avatarUrl}

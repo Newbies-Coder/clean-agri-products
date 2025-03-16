@@ -22,10 +22,10 @@ export interface Product {
   slug?: string;
   description: string;
   origin: string;
-  category_id: string;
+  category: Categoty;
   thumbnail_url: string;
   sold?: number;
-  supplier_id?: string;
+  supplier: Supplier;
   images?: ImageType[];
   rating?: number;
   numberOfReview?: number;
@@ -36,8 +36,8 @@ export interface Product {
   updater_id?: string;
   created_at?: Date;
   updated_at?: Date;
-  attributes: ProductAttribute[]
-  tags: ProductTag[]
+  attribute: ProductAttribute
+  hashtags: ProductTag[]
 }
 
 interface ProductAttribute {
@@ -63,8 +63,19 @@ interface ProductAttribute {
 
 interface ProductTag {
   _id?: string;
-  user_id: string;
-  product_id: string;
-  hashtag_id: string;
-  added_at?: Date;
+  name: string;
+}
+interface Categoty {
+  _id: string;
+  name: string;
+  slug: string;
+}
+
+interface Supplier {
+  _id: string;
+  company_name: string;
+  contact_name: string;
+  address: string;
+  phone: string;
+  email: string;
 }
