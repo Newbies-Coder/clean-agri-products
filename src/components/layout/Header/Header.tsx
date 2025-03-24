@@ -3,13 +3,17 @@ import Search from "../SearchBar";
 import { Heart, ShoppingCart } from "lucide-react";
 import Navbar from "../Navbar";
 import Logo from "@/assets/svg/Logo-black.svg";
-import { cartItems } from "@/mocks/cart";
+import { useGetCarts } from "@/actions/cart.action";
 
 export default function Header() {
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const { data, isLoading } = useGetCarts();
+  if (isLoading) return <div className="h-[93px]"></div>;
+  // Calculate the subtotal of the cart
+  const subtotal = data!.carts.reduce(
+    (prev, item) => prev + item.price * item.quantity,
     0
   );
+
   return (
     <>
       <header className="sticky z-20 top-0 hidden md:block">
@@ -32,7 +36,7 @@ export default function Header() {
                 <div className="relative">
                   <ShoppingCart size={34} strokeWidth={1} />
                   <span className="absolute inline-block text-primary-foreground top-[-1px] right-0 px-[6px] py-[1px] rounded-full text-[10px] bg-green-700">
-                    2
+                   {data?.carts.length}
                   </span>
                 </div>
                 <Link to="/cart" className="hidden lg:block">

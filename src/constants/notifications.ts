@@ -26,6 +26,12 @@ export const NOTIFICATIONS = {
       INVALID: "Invalid OTP, please try again!"
     }
   },
+  CART: {
+    TOAST: {
+      title: "Successfully!",
+      description: "You have already added this product to cart.",
+    },
+  }
 };
 
 export const ERROR_TOAST = (message: string) => ({

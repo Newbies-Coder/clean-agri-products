@@ -1,4 +1,4 @@
-import { Rate, Skeleton } from "antd";
+import { Rate } from "antd";
 import { useState } from "react";
 import {
   Heart,
@@ -9,18 +9,23 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useProductDetail } from "@/actions/product.action";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAddToCart } from "@/actions/cart.action";
+import { useToast } from "@/hooks/use-toast";
+import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
 
 const ProductInfo = ({ productId }: { productId: string }) => {
+  const { toast } = useToast();
   // Fetch product detail
   const { data, isLoading } = useProductDetail(productId);
 
+  const { mutate: addToCart } = useAddToCart();
   // Function to handle changes in the product quantity (increment or decrement)
   const [quantity, setQuantity] = useState<number>(1);
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
   };
-  if (!data) return <Skeleton className="h-[500px]" />;
-  if (isLoading) return <Skeleton className="h-[500px]" />;
+  if (isLoading || !data) return <Skeleton className="h-[500px]" />;
 
   const {
     name,
@@ -34,17 +39,30 @@ const ProductInfo = ({ productId }: { productId: string }) => {
     numberOfReview,
     hashtags,
   } = data!;
-  const { original_price, discount_price } = attribute;
+  const { original_price, discount_price, _id } = attribute;
 
   // Calculate the price based on the discount
   const calPrice = () => {
-    if (!original_price) return "N/A";
-    if (discount_price) {
-      return (original_price * (1 - discount_price / 100)).toFixed(2);
-    }
-    return original_price.toFixed(2);
-  };
+    if (!original_price) return "";
+    return discount_price
+      ? (original_price * (1 - discount_price / 100)).toFixed(2)
+      : original_price.toFixed(2);
+  }
 
+  const handleAddtoCart = () => {
+    try {
+      addToCart({
+        product_id: productId,
+        product_attribute_id: _id ?? "",
+        quantity,
+      });
+      toast(NOTIFICATIONS.CART.TOAST);
+    } catch (error) {
+      const errorMessage =
+        (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
+      toast(ERROR_TOAST(errorMessage));
+    }
+  };
 
   return (
     <section className="flex flex-col gap-4 max-sm:px-5">
@@ -127,7 +145,10 @@ const ProductInfo = ({ productId }: { productId: string }) => {
             +
           </button>
         </div>
-        <button className="flex-1 flex items-center justify-center gap-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/80 transition-colors text-lg font-medium">
+        <button
+          onClick={handleAddtoCart}
+          className="flex-1 flex items-center justify-center gap-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/80 transition-colors text-lg font-medium"
+        >
           <span className="max-[432px]:hidden">Add to Cart</span>
           <ShoppingCart className="max-[432px]:block hidden sm:block" />
         </button>
@@ -144,12 +165,16 @@ const ProductInfo = ({ productId }: { productId: string }) => {
         </div>
         <div className="flex flex-wrap gap-2">
           <span className="text-gray-600">Tag:</span>
-          {hashtags.length>0 ? hashtags.map((tag, index) => (
-            <span key={index} className="text-gray-600 hover:font-medium">
-              {tag.name}
-              {index < hashtags.length - 1 && " •"}
-            </span>
-          )) : <span className="text-gray-400">No Tag</span>}
+          {hashtags.length > 0 ? (
+            hashtags.map((tag, index) => (
+              <span key={index} className="text-gray-600 hover:font-medium">
+                {tag.name}
+                {index < hashtags.length - 1 && " •"}
+              </span>
+            ))
+          ) : (
+            <span className="text-gray-400">No Tag</span>
+          )}
         </div>
       </div>
     </section>
