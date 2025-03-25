@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DotLoader } from "react-spinners";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
-import { loginAction } from "@/actions/auth.action";
+import { loginAction } from "@/apis/auth.api";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,7 @@ import { InputPassword } from "@/components/ui/input-password";
 import { LoginSchema, LoginType } from "@/schemas/auth.schema";
 import { useToast } from "@/hooks/use-toast";
 import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
-import { getProfile } from "@/actions/user.action";
+import { getProfile } from "@/apis/user.api";
 import { useAuthStore } from "@/store/auth.store";
 
 const LoginForm = () => {
@@ -42,8 +42,8 @@ const LoginForm = () => {
     try {
       setLoading(true);
       await loginAction(data); // Call loginAction with data
-      const userData = await getProfile() // Get user data
-      setUser(userData) // Set user data to the store
+      const userData = await getProfile(); // Get user data
+      setUser(userData); // Set user data to the store
       toast(NOTIFICATIONS.AUTH.LOGIN.TOAST); // Notify if login successfully
       navigate("/"); // Navigate to the Home page
     } catch (error: unknown) {

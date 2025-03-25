@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RegisterSchema, RegisterType } from "@/schemas/auth.schema";
-import { registerAction } from "@/actions/auth.action";
+import { registerAction } from "@/apis/auth.api";
 import { useToast } from "@/hooks/use-toast";
 import {
   Form,
@@ -43,9 +43,8 @@ const RegisterForm = () => {
       await registerAction(data);
       toast(NOTIFICATIONS.AUTH.REGISTER.TOAST); // Notify if create account successfully
       navigate("/auth/otp-verification"); // Navigate to the OTP verification page
-
     } catch (error: unknown) {
-      const errorMessage = 
+      const errorMessage =
         (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
       toast(ERROR_TOAST(errorMessage));
     } finally {

@@ -1,58 +1,31 @@
+import { useProductDetail } from "@/actions/product.action";
 import HotProductCard from "@/components/common/Card/HotProductCard";
-import ProductCard from "@/components/common/Card/ProductCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { products } from "@/mocks/product";
 
-interface AdditionalInfoProps {
-  weight: number;
-  color: string;
-  type: string;
-  category: string;
-  stockStatus: string;
-  tags: string[];
-}
 
-const AdditionalInfo: React.FC<AdditionalInfoProps> = ({
-  weight,
-  category,
-  color,
-  stockStatus,
-  tags,
-  type,
-}) => {
+const AdditionalInfo = ({ productId }: { productId: string }) => {
+    const { data, isLoading } = useProductDetail(productId);
+    if (isLoading) return <Skeleton className="h-[500px]" />;
+    const {
+      attribute,
+      category,
+    } = data!;
   return (
     <div className="container grid grid-cols-1 gap-4 pb-5">
       <div className="flex flex-col lg:flex-row gap-4 max-lg:gap-8 lg:justify-start">
         <ul className="md:basis-5/12 self-center lg:pr-5">
           <li className="py-2 flex">
-            <span className="min-w-32">Tags:</span>
-            <span>
-              {tags.map((tag, index) => (
-                <span key={index} className="text-gray-600 hover:font-medium">
-                  {tag}
-                  {index < tags.length - 1 && " • "}
-                </span>
-              ))}
-            </span>
-          </li>
-          <li className="py-2 flex">
             <span className="min-w-32">Weight:</span>
-            <span className="flex-1">{weight}</span>
-          </li>
-          <li className="py-2 flex">
-            <span className="min-w-32">Color:</span>
-            <span>{color}</span>
-          </li>
-          <li className="py-2 flex">
-            <span className="min-w-32">Type:</span>
-            <span>{type}</span>
+            <span className="flex-1">{attribute.weight}</span>
           </li>
           <li className="py-2 flex">
             <span className="min-w-32">Category:</span>
-            <span>{category}</span>
+            <span>{category.name}</span>
           </li>
           <li className="py-2 flex">
-            <span className="min-w-32">Stock status:</span>
-            <span>{stockStatus}</span>
+            <span className="min-w-32">Unit of measurement:</span>
+            <span>{attribute.unit_of_measurement}</span>
           </li>
         </ul>
 
@@ -73,11 +46,11 @@ const AdditionalInfo: React.FC<AdditionalInfoProps> = ({
         <h5 className="text-2xl font-semibold text-center mb-4">
           Related Products
         </h5>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-5">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-5">
           {products.slice(0, 12).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

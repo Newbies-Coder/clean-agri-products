@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ImageType } from "@/@types/product.type";
 import {
   Carousel,
   CarouselContent,
@@ -7,25 +6,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-interface GalleryProps {
-  images: ImageType[];
-  name: string;
-}
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import { useProductDetail } from "@/actions/product.action";
 
-const Gallery: React.FC<GalleryProps> = ({ images, name }) => {
+const Gallery = ({ productId }: { productId: string }) => {
   const ORIENTATION_THRESHOLD = 1320;
 
   const [selectedImage, setSelectedImage] = useState(0);
-
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // State to control the orientation of the carousel (vertical or horizontal) based on the screen width
+  // Handle screen resize
   const [orientation, setOrientation] = useState<
     "vertical" | "horizontal" | undefined
   >(window.innerWidth >= ORIENTATION_THRESHOLD ? "vertical" : "horizontal");
 
-  // Handle screen resize and dynamically update the orientation of the carousel
   useEffect(() => {
     const handleResize = () => {
       setOrientation(
@@ -37,7 +32,6 @@ const Gallery: React.FC<GalleryProps> = ({ images, name }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Track the mouse position for zoom functionality
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isZoomed) return;
 
@@ -48,38 +42,53 @@ const Gallery: React.FC<GalleryProps> = ({ images, name }) => {
     setMousePosition({ x, y });
   };
 
+  // Fetch product detail
+  const { data, isLoading } = useProductDetail(productId);
+
   return (
     <section className="flex flex-col-reverse xl:flex-row gap-4 xl:items-center">
       {/* Thumbnails */}
       <Carousel
         opts={{
           align: "start",
-          loop: true, // Enable infinite looping
+          loop: true,
         }}
         orientation={orientation}
-        className="max-xl:w-4/5 max-xl:left-1/2 max-xl:-translate-x-1/2 "
+        className="max-xl:w-4/5 max-xl:left-1/2 max-xl:-translate-x-1/2"
       >
         <CarouselPrevious className="max-xs:hidden max-md:scale-75 max-xs:left-0 max-xs:translate-x-3 duration-200 active:bg-primary active:text-primary-foreground" />
         <CarouselContent className="xl:h-96 gap-0">
-          {images.map((image, index) => (
-            <CarouselItem
-              key={index}
-              className="max-[432px]:basis-1/3 basis-1/3 sm:basis-1/5 lg:basis-1/4 w-20 p-0 flex items-end justify-center "
-              onClick={() => setSelectedImage(index)}
-            >
-              <button
-                className={`w-20 h-20 border rounded-lg ${
-                  selectedImage === index ? "border-primary" : "border-gray-200"
-                }`}
-              >
-                <img
-                  src={image.url}
-                  alt={name + index}
-                  className="rounded-lg h-full w-full"
-                />
-              </button>
-            </CarouselItem>
-          ))}
+          {isLoading
+            ? // Hiển thị skeleton khi đang tải
+              Array.from({ length: 5 }).map((_, index) => (
+                <CarouselItem
+                  key={index}
+                  className="max-[432px]:basis-1/3 basis-1/3 sm:basis-1/5 lg:basis-1/4 w-20 p-0 flex items-end justify-center"
+                >
+                  <Skeleton className="w-20 h-20 rounded-lg bg-gray-200" />
+                </CarouselItem>
+              ))
+            : data?.images?.map((image, index) => (
+                <CarouselItem
+                  key={index}
+                  className="max-[432px]:basis-1/3 basis-1/3 sm:basis-1/5 lg:basis-1/4 w-20 p-0 flex items-end justify-center"
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <button
+                    className={`w-20 h-20 border rounded-lg ${
+                      selectedImage === index
+                        ? "border-primary"
+                        : "border-gray-200"
+                    }`}
+                  >
+                    <img
+                      src={image.url}
+                      alt={data?.name + index}
+                      className="rounded-lg h-full w-full"
+                    />
+                  </button>
+                </CarouselItem>
+              ))}
         </CarouselContent>
         <CarouselNext className="max-xs:hidden max-md:scale-75 max-xs:right-0 max-xs:left-x-3 active:bg-primary active:text-primary-foreground" />
       </Carousel>
@@ -100,11 +109,19 @@ const Gallery: React.FC<GalleryProps> = ({ images, name }) => {
               transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
             }}
           >
-            <img
-              src={images[selectedImage].url}
-              alt={name + images[selectedImage].id}
-              className="w-full h-full object-center"
-            />
+            {isLoading ? (
+              // Skeleton cho ảnh chính
+              <Skeleton className="w-full h-full bg-gray-200" />
+            ) : (
+              data?.images &&
+              data.images[selectedImage] && (
+                <img
+                  src={data.images[selectedImage].url}
+                  alt={data.name + selectedImage}
+                  className="w-full h-full object-center"
+                />
+              )
+            )}
           </div>
         </div>
       </div>

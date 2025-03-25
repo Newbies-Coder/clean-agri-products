@@ -1,11 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { cartItems } from "@/mocks/cart";
 import { Link } from "react-router-dom";
+import { useGetCarts } from "@/actions/cart.action";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CartTotal = () => {
+  const { data, isLoading } = useGetCarts();
+  if (isLoading) return <Skeleton className="h-28"></Skeleton>;
   // Calculate the subtotal of the cart
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const subtotal = data!.carts.reduce(
+    (prev, item) => prev + item.price * item.quantity,
     0
   );
   const shipping = 5.0;

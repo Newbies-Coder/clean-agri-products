@@ -1,5 +1,5 @@
 import { Rate } from "antd";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   Heart,
   Facebook,
@@ -8,46 +8,62 @@ import {
   Share2,
   ShoppingCart,
 } from "lucide-react";
+import { useProductDetail } from "@/actions/product.action";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAddToCart } from "@/actions/cart.action";
+import { useToast } from "@/hooks/use-toast";
+import { ERROR_TOAST, NOTIFICATIONS } from "@/constants/notifications";
 
-interface ProductInfoProps {
-  name: string;
-  rating: number;
-  reviewCount: number;
-  original: string;
-  originalPrice: number;
-  discount?: number;
-  brand: {
-    name: string;
-    logo: string;
-  };
-  description: string;
-  category: string;
-  tags: string[];
-  stockStatus: string;
-}
+const ProductInfo = ({ productId }: { productId: string }) => {
+  const { toast } = useToast();
+  // Fetch product detail
+  const { data, isLoading } = useProductDetail(productId);
 
-const ProductInfo: React.FC<ProductInfoProps> = ({
-  name,
-  rating,
-  reviewCount,
-  original,
-  originalPrice,
-  discount,
-  brand,
-  description,
-  category,
-  tags,
-  stockStatus,
-}) => {
-  const [quantity, setQuantity] = useState(1);
-
-  const price = discount
-    ? (originalPrice * (1 - discount / 100)).toFixed(2)
-    : originalPrice.toFixed(2);
+  const { mutate: addToCart } = useAddToCart();
   // Function to handle changes in the product quantity (increment or decrement)
-  const handleQuantityChange = useCallback((change: number) => {
+  const [quantity, setQuantity] = useState<number>(1);
+  const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
-  }, []);
+  };
+  if (isLoading || !data) return <Skeleton className="h-[500px]" />;
+
+  const {
+    name,
+    rating,
+    description,
+    attribute,
+    hot,
+    origin,
+    category,
+    supplier,
+    numberOfReview,
+    hashtags,
+  } = data!;
+  const { original_price, discount_price, _id } = attribute;
+
+  // Calculate the price based on the discount
+  const calPrice = () => {
+    if (!original_price) return "";
+    return discount_price
+      ? (original_price * (1 - discount_price / 100)).toFixed(2)
+      : original_price.toFixed(2);
+  }
+
+  const handleAddtoCart = () => {
+    try {
+      addToCart({
+        product_id: productId,
+        product_attribute_id: _id ?? "",
+        quantity,
+      });
+      toast(NOTIFICATIONS.CART.TOAST);
+    } catch (error) {
+      const errorMessage =
+        (error as Error).message || NOTIFICATIONS.ERROR.UNDEFINED;
+      toast(ERROR_TOAST(errorMessage));
+    }
+  };
+
   return (
     <section className="flex flex-col gap-4 max-sm:px-5">
       {/* Header */}
@@ -55,9 +71,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <div>
           <div className="flex max-[432px]:flex-col gap-4 max-[432px]:items-start items-center">
             <h2 className="text-3xl sm:text-4xl font-semibold">{name}</h2>
-            <span className="px-3 py-1 text-green-600 bg-green-100 rounded-full text-sm">
-              {stockStatus}
-            </span>
+            {hot && (
+              <span className="px-3 py-1 text-green-600 bg-green-100 rounded-full text-sm">
+                HOT
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-2 mt-2">
             <div>
@@ -68,24 +86,24 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 className="text-[#ff8a00] text-sm"
               />
             </div>
-            <span className="text-gray-600">{reviewCount} Review</span>
+            <span className="text-gray-600">{numberOfReview} Review</span>
             <span className="text-gray-400">•</span>
-            <span className="text-gray-600">{original}</span>
+            <span className="text-gray-600">{origin}</span>
           </div>
         </div>
       </div>
 
       {/* Price */}
       <div className="flex items-center gap-2">
-        {discount && (
+        {discount_price && (
           <span className="text-2xl text-gray-400 line-through">
-            ${originalPrice.toFixed(2)}
+            ${original_price.toFixed(2)}
           </span>
         )}
-        <span className="text-2xl font-medium text-green-700">${price}</span>
-        {discount && (
+        <span className="text-2xl font-medium text-green-700">${calPrice()}</span>
+        {discount_price && (
           <span className="text-red-600 bg-red-100 rounded-full px-3 py-0.5 ml-4">
-            {discount}% Off
+            {discount_price}% Off
           </span>
         )}
       </div>
@@ -93,8 +111,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       {/* Brand */}
       <div className="flex items-center justify-between border-t pt-6 pb-4">
         <div className="flex items-center gap-2">
-          <span className="text-gray-600">Brand:</span>
-          <img src={brand.logo} alt={brand.name} className="h-8" />
+          <span className="text-gray-600">Brand: {supplier.contact_name}</span>
+          {/* <img src={brand.logo} alt={brand.name} className="h-8" /> */}
         </div>
         <div className="flex items-center gap-3">
           <span className="text-gray-600">Share item:</span>
@@ -127,7 +145,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             +
           </button>
         </div>
-        <button className="flex-1 flex items-center justify-center gap-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/80 transition-colors text-lg font-medium">
+        <button
+          onClick={handleAddtoCart}
+          className="flex-1 flex items-center justify-center gap-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/80 transition-colors text-lg font-medium"
+        >
           <span className="max-[432px]:hidden">Add to Cart</span>
           <ShoppingCart className="max-[432px]:block hidden sm:block" />
         </button>
@@ -140,16 +161,20 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       <div className="space-y-2 mt-1">
         <div className="flex gap-2">
           <span className="text-gray-600 font-medium">Category:</span>
-          <span className="text-green-600">{category}</span>
+          <span className="text-green-600">{category.name}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           <span className="text-gray-600">Tag:</span>
-          {tags.map((tag, index) => (
-            <span key={index} className="text-gray-600 hover:font-medium">
-              {tag}
-              {index < tags.length - 1 && " •"}
-            </span>
-          ))}
+          {hashtags.length > 0 ? (
+            hashtags.map((tag, index) => (
+              <span key={index} className="text-gray-600 hover:font-medium">
+                {tag.name}
+                {index < hashtags.length - 1 && " •"}
+              </span>
+            ))
+          ) : (
+            <span className="text-gray-400">No Tag</span>
+          )}
         </div>
       </div>
     </section>
